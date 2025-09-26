@@ -1,0 +1,17 @@
+services:
+  minio:
+    image: 'minio/minio:RELEASE.2025-02-18T16-25-55Z'
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      AWS_REGION: us-east-1
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-hawkeye-data:/data
+
+volumes:
+  minio-hawkeye-data:
+      driver: local
