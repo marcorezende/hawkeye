@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   superset:
-    image: amancevice/superset:4.1.1
+    image: marcorezende/superset
     ports:
       - '8088:8088'
     depends_on:
