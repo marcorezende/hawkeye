@@ -21,6 +21,12 @@ CACHE_CONFIG = {
 FILTER_STATE_CACHE_CONFIG = {**CACHE_CONFIG, "CACHE_KEY_PREFIX": "superset_filter_"}
 EXPLORE_FORM_DATA_CACHE_CONFIG = {**CACHE_CONFIG, "CACHE_KEY_PREFIX": "superset_explore_form_"}
 
+
+WEBDRIVER_TYPE = "firefox"
+WEBDRIVER_BASEURL = "http://superset:8088"  # or whatever URL your superset instance is running on, the webdriver will use this URL to connect to superset in order to take a screenshot
+THUMBNAIL_SELENIUM_USER = "admin"  # any user with permissions to view all charts is sufficient
+
+
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:5432/{os.getenv('POSTGRES_DB')}"
 
