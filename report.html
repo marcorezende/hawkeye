@@ -28,30 +28,196 @@
             color: #333;
         }}
 
+        .header {{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: #1b2a57;
+            color: white;
+            padding: 15px;
+        }}
+
+        .header h1 {{
+            margin: 0;
+            font-size: 24px;
+
+        }}
+
+        .header h2 {{
+            margin: 0;
+            font-size: 20px;
+
+        }}
+
+        .header img {{
+            width: 100px;
+
+        }}
+
+        .subheader {{
+            font-size: 12px;
+            color: #a4aebd;
+            margin-top: 5px;
+        }}
+
+        .section {{
+            margin: 30px;
+        }}
+
+        .section-title {{
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 10px;
+        }}
+
+        .numbers {{
+            display: flex;
+            /*justify-content: space-between;*/
+            gap: 10px;
+            margin-top: 20px;
+        }}
+
+        .box {{
+            flex: 1 1 23%;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* leve sombra */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }}
+
+        .box h3 {{
+            margin: 0 0 10px 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #000000;
+        }}
+
+        .box img {{
+            width: 120px;
+            border-radius: 8px;
+        }}
+
+        .box p {{
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            color: #666;
+        }}
+
+
+        .chart-item img {{
+            width: 600px;
+            border-radius: 10px;
+        }}
+
+        .char-section {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }}
+
+        footer {{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-top: 50px;
+            font-size: 16px;
+            padding: 10px;
+            background-color: #e9e3d8;
+        }}
+
+        footer a {{
+            color: #1b2a57;
+            text-decoration: none;
+        }}
+
+        footer img {{
+            width: 170px;
+        }}
+
+        .summary {{
+            color: black;
+        }}
+
     </style>
 </head>
 <body>
 
-<span>{name}</span>
-<span>{date}</span>
-<span>{week_range}</span>
+<div class="header">
+    <div>
+        <h1>RELATÓRIO SEMANAL</h1>
+        <h2>{name}</h2>
+        <div class="subheader">RESUMO DA SEMANA ({week_range})</div>
+    </div>
+<!--    <img src="data/img/lm_logo.png" alt="logo">-->
+
+
+</div>
+
 <div class="section">
     <div class="section-title">RESUMO</div>
     <p class="summary">
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+    Durante as visitas da última semana, foram observadas recorrentes falhas de higiene, como excesso de sujidade em instalações e equipamentos, e falta de insumos para higienização das mãos. Problemas com controle de pragas, armazenamento inadequado de produtos e embalagens, e equipamentos danificados foram comuns. Além disso, a falta de rotulagem e rastreabilidade em produtos manipulados, e a exposição de produtos impróprios para venda, como vencidos ou avariados, foram pontos críticos identificados em diversas áreas, especialmente no açougue, padaria e peixaria.
     </p>
 </div>
 
 <div class="section">
-    <div class="section-title">teste</div>
+    <div class="section-title">VISÃO GERAL EM NÚMEROS</div>
     <div class="numbers">
         <div class="box">
-            <h3>teste</h3>
+            <h3>VISITAS</h3>
             <img src="data/img/14.png" alt="Minha Figura">
+        </div>
+        <div class="box">
+            <h3>FOTOS DE VENCIDOS</h3>
+            <img src="data/img/14.png" alt="Minha Figura">
+
+        </div>
+        <div class="box">
+            <h3>NÃO CONFORMIDADES</h3>
+            <img src="data/img/14.png" alt="Minha Figura">
+
+        </div>
+        <div class="box">
+            <h3>NOTA MÉDIA</h3>
+            <img src="data/img/14.png" alt="Minha Figura">
+
         </div>
     </div>
 </div>
 
+
+<div class="section">
+    <div class="section-title">VISUALIZAÇÕES</div>
+    <div class="char-section">
+        <div class="chart-item">
+            <h3>NOTAS POR LOJA</h3>
+            <img src="data/img/14.png" alt="Minha Figura">
+        </div>
+        <div class="chart-item">
+            <h3>ITENS ATINGIDOS</h3>
+            <img src="data/img/14.png" alt="Minha Figura">
+        </div>
+        <div class="chart-item">
+            <h3>ITENS POR LOJA</h3>
+            <img src="data/img/14.png" alt="Minha Figura">
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    <div>
+        Relatório gerado em {date}<br>
+    </div>
+</footer>
 
 </body>
 </html>

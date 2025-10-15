@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from weasyprint import HTML
 
-output_path = "generated_report.pdf"
+output_path = "new_generated_report.pdf"
 
 name = "title"
 today = date.today()
