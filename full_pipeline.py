@@ -100,6 +100,7 @@ def cleaned():
 
 @flow
 def fluxo_principal():
+    ingest_data()
     create_secret()
     raw()
     cleaned()
