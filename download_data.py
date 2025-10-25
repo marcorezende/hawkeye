@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 
 
-def main():
+def ingest_data():
     load_dotenv()
     username = os.getenv("CHECKLIST_FACIL_USERNAME")
     password = os.getenv("CHECKLIST_FACIL_PASSWORD")
@@ -13,7 +13,7 @@ def main():
     os.makedirs(download_dir, exist_ok=True)
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context(accept_downloads=True)
         page = context.new_page()
 
@@ -31,10 +31,10 @@ def main():
         page.goto("https://app.checklistfacil.com.br/evaluations")
         page.wait_for_selector("#start_date input.mdc-text-field__input")
 
-        page.fill("#start_date input.mdc-text-field__input", "26/09/2025")
+        page.fill("#start_date input.mdc-text-field__input", "17/10/2025")
         page.keyboard.press("Tab")
 
-        page.fill("#end_date input.mdc-text-field__input", "28/09/2025")
+        page.fill("#end_date input.mdc-text-field__input", "25/10/2025")
         page.keyboard.press("Tab")
 
         page.click("button:has-text('Filtrar') >> text='Filtrar'")
@@ -77,9 +77,6 @@ def main():
 
         object_name = os.path.basename(local_file_path)
 
-        s3_client.upload_file('downloads/avaliacoes-itens-por-linha-lm-da-silva-717804-20251022111833.csv', os.getenv('MINIO_BUCKET'), f'landing/{object_name}')
-        print(f"Arquivo enviado para MinIO: s3://{os.getenv('MINIO_BUCKET')}/landing/{object_name}")
+        s3_client.upload_file(local_file_path, os.getenv('MINIO_BUCKET'), f'landing/lm/{object_name}')
+        print(f"Arquivo enviado para MinIO: s3://{os.getenv('MINIO_BUCKET')}/landing/lm/{object_name}")
 
-
-if __name__ == "__main__":
-    main()

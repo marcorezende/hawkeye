@@ -5,7 +5,7 @@ from urllib.parse import urlparse, urlunparse
 import requests
 import json
 
-from weasyprint import HTML
+from generate_report import generate_report_pdf
 
 BASE_URL = "http://localhost:8088"
 USERNAME = "admin"
@@ -35,12 +35,23 @@ class UpdateChart:
         chart_resp = requests.get(f"{url}/api/v1/chart/{chart_id}", headers=headers)
         chart_data = chart_resp.json()["result"]
         params = json.loads(chart_data["params"])
-        return params, chart_data
+        query_context = json.loads(chart_data["query_context"])
+        return params, chart_data, query_context
 
     @staticmethod
     def add_filter(chart_filter, company):
         new_filter = chart_filter.copy()
-        new_filter = list(filter(lambda x: x['subject'] != 'unidade', new_filter))
+        new_filter = list(filter(lambda x: x['subject'] not in ['unidade', 'data_inicial'], new_filter))
+        new_filter.append(
+            {'clause': 'WHERE',
+             'comparator': 'Last week',
+             'datasourceWarning': False,
+             'expressionType': 'SIMPLE',
+             'isExtra': False, 'isNew': False,
+             'operator': 'TEMPORAL_RANGE',
+             'sqlExpression': None,
+             'subject': 'data_inicial'}
+        )
         new_filter.append({
             "expressionType": "SIMPLE",
             "subject": "unidade",
@@ -49,6 +60,7 @@ class UpdateChart:
             "clause": "WHERE",
             "sqlExpression": None
         })
+
         return new_filter
 
     @staticmethod
@@ -72,7 +84,7 @@ class UpdateChart:
     def run(self):
         headers = self.get_auth_token(url=self.base_url, username=self.username, password=self.password)
         for chart_id in self.charts:
-            params, chart_data = self.get_chart(chart_id=chart_id, headers=headers, url=self.base_url)
+            params, chart_data, query_context = self.get_chart(chart_id=chart_id, headers=headers, url=self.base_url)
             new_filter = self.add_filter(chart_filter=params["adhoc_filters"], company=self.company)
             params["adhoc_filters"] = new_filter
             self.update_chart(chart_id=chart_id,
@@ -140,16 +152,28 @@ class ScreenshotChart:
         headers = self.get_auth_token(url=self.base_url, username=self.username, password=self.password)
         image_url = self.cache_screenshot(cache_screenshot_url=chart_cache_screenshot_url, headers=headers)
         new_image_url = self.change_base_url(old_url=image_url, new_base_url=self.base_url)
-        self.download_screenshot(url=new_image_url, headers=headers, output_path=f"./data/img{chart_id}.png")
+        self.download_screenshot(url=new_image_url, headers=headers, output_path=f"./data/img/{chart_id}.png")
 
 
-UpdateChart(BASE_URL, USERNAME, PASSWORD, [3], 'SUPERMERCADO X').run()
-# ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=1)
-# ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=2)
-ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=3)
-# ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=4)
-# ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=5)
-# ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=6)
-# ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=7)
-# output_path = "generated_real_report.pdf"
-# HTML("cv.html").write_pdf(target=output_path)
+charts_mapping = {
+    # 'total_vencidos': 5,
+    # 'total_visitas': 3,
+    # 'total_nao_conformidades': 4,
+    # 'media_nota': 6,
+    # 'conformidade_por_unidade': 1,
+    'media_nota_por_unidade': 7,
+    # 'porcentagem_conformidade': 2,
+    # 'conformidade_por_area': 9,
+    # 'itens_nao_conformes': 8
+}
+
+chart_ids = charts_mapping.values()
+
+company = 'SUPERMERCADO RODRIGUES'
+
+UpdateChart(BASE_URL, USERNAME, PASSWORD, chart_ids, company).run()
+
+for chart_id in chart_ids:
+    ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=chart_id)
+#
+# generate_report_pdf(output_path='test.pdf', name=company)

@@ -78,6 +78,32 @@ services:
     volumes:
       - minio-hawkeye-data:/data
 
+  prefect:
+    image: marcorezende/prefect
+    command: prefect server start --host 0.0.0.0
+    ports:
+      - "4200:4200"
+    volumes:
+      - .git_deploy.py:/app/flows/git_deploy.py
+    environment:
+      PREFECT_LOGGING_LEVEL: DEBUG
+      PREFECT_API_URL: ${PREFECT_API_URL}
+      PREFECT_API_AUTH_STRING: ${PREFECT_API_AUTH_STRING}
+      PREFECT_SERVER_API_AUTH_STRING: ${PREFECT_SERVER_API_AUTH_STRING}
+
+  prefect-worker:
+    image: marcorezende/prefect
+    command: prefect worker start --pool "lm"
+    depends_on:
+      - prefect
+    volumes:
+      - .git_deploy.py:/app/flows/git_deploy.py
+    environment:
+      PREFECT_LOGGING_LEVEL: DEBUG
+      PREFECT_API_URL: http://prefect:4200/api/
+      PREFECT_API_AUTH_STRING: ${PREFECT_API_AUTH_STRING}
+      PREFECT_SERVER_API_AUTH_STRING: ${PREFECT_SERVER_API_AUTH_STRING}
+
 volumes:
   minio-hawkeye-data:
     driver: local
