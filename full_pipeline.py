@@ -19,7 +19,7 @@ def create_secret():
     REGION 'us-east-1',
     KEY_ID '{os.getenv("MINIO_ACCESS_KEY")}',
     SECRET '{os.getenv("MINIO_SECRET_KEY")}',
-    ENDPOINT '{os.getenv("MINIO_ENDPOINT")}',
+    ENDPOINT '{os.getenv("MINIO_ENDPOINT").replace('http://', '')}',
     USE_SSL 'false',
     URL_STYLE 'path');
     """)
