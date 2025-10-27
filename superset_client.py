@@ -156,20 +156,20 @@ class ScreenshotChart:
 
 
 charts_mapping = {
-    # 'total_vencidos': 5,
-    # 'total_visitas': 3,
-    # 'total_nao_conformidades': 4,
-    # 'media_nota': 6,
-    # 'conformidade_por_unidade': 1,
+    'total_vencidos': 5,
+    'total_visitas': 3,
+    'total_nao_conformidades': 4,
+    'media_nota': 6,
+    'conformidade_por_unidade': 1,
     'media_nota_por_unidade': 7,
-    # 'porcentagem_conformidade': 2,
-    # 'conformidade_por_area': 9,
-    # 'itens_nao_conformes': 8
+    'porcentagem_conformidade': 2,
+    'conformidade_por_area': 9,
+    'itens_nao_conformes': 8
 }
 
 chart_ids = charts_mapping.values()
 
-company = 'SUPERMERCADO RODRIGUES'
+company = 'SUPERMERCADO X'
 
 UpdateChart(BASE_URL, USERNAME, PASSWORD, chart_ids, company).run()
 
