@@ -19,7 +19,7 @@ def ingest_data():
     start_date = last_week.strftime('%d/%m/%Y')
     end_date = today.strftime('%d/%m/%Y')
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context(accept_downloads=True)
         page = context.new_page()
 
