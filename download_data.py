@@ -83,5 +83,5 @@ def ingest_data():
 
         object_name = os.path.basename(local_file_path)
 
-        s3_client.upload_file(local_file_path, os.getenv('MINIO_BUCKET'), f'landing/lm/{object_name}')
-        print(f"Arquivo enviado para MinIO: s3://{os.getenv('MINIO_BUCKET')}/landing/lm/{object_name}")
+        s3_client.upload_file(local_file_path, os.getenv('MINIO_BUCKET'), f'lm/landing/{object_name}')
+        print(f"Arquivo enviado para MinIO: s3://{os.getenv('MINIO_BUCKET')}/lm/landing/{object_name}")
