@@ -4,6 +4,7 @@ from prefect import flow, task
 import duckdb
 
 from download_data import ingest_data
+from superset_client import generate_report_pipe
 
 
 @task
@@ -104,6 +105,7 @@ def fluxo_principal():
     create_secret()
     raw()
     cleaned()
+    generate_report_pipe()
 
 
 if __name__ == "__main__":

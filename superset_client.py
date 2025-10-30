@@ -1,15 +1,14 @@
+import os
 import time
+from datetime import datetime
 from pprint import pprint
 from urllib.parse import urlparse, urlunparse
 
+import boto3
 import requests
 import json
 
 from generate_report import generate_report_pdf
-
-BASE_URL = "http://localhost:8088"
-USERNAME = "admin"
-PASSWORD = "admin"
 
 
 class UpdateChart:
@@ -155,25 +154,42 @@ class ScreenshotChart:
         self.download_screenshot(url=new_image_url, headers=headers, output_path=f"./data/img/{chart_id}.png")
 
 
-charts_mapping = {
-    'total_vencidos': 5,
-    'total_visitas': 3,
-    'total_nao_conformidades': 4,
-    'media_nota': 6,
-    'conformidade_por_unidade': 1,
-    'media_nota_por_unidade': 7,
-    'porcentagem_conformidade': 2,
-    'conformidade_por_area': 9,
-    'itens_nao_conformes': 8
-}
+def generate_report_pipe():
+    BASE_URL = "http://superset:8088"
+    USERNAME = "admin"
+    PASSWORD = "admin"
 
-chart_ids = charts_mapping.values()
+    charts_mapping = {
+        'total_vencidos': 5,
+        'total_visitas': 3,
+        'total_nao_conformidades': 4,
+        'media_nota': 6,
+        'conformidade_por_unidade': 1,
+        'media_nota_por_unidade': 7,
+        'porcentagem_conformidade': 2,
+        'conformidade_por_area': 9,
+        'itens_nao_conformes': 8
+    }
 
-company = 'SUPERMERCADO X'
+    chart_ids = charts_mapping.values()
 
-UpdateChart(BASE_URL, USERNAME, PASSWORD, chart_ids, company).run()
+    company = 'SUPERMERCADO RODRIGUES'
 
-for chart_id in chart_ids:
-    ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=chart_id)
-#
-# generate_report_pdf(output_path='test.pdf', name=company)
+    UpdateChart(BASE_URL, USERNAME, PASSWORD, chart_ids, company).run()
+
+    for chart_id in chart_ids:
+        ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=chart_id)
+
+    generate_report_pdf(output_path='report.pdf', name=company)
+    s3 = boto3.client(
+        "s3",
+        endpoint_url=os.getenv('MINIO_ENDPOINT'),
+        aws_access_key_id=os.getenv('MINIO_ACCESS_KEY'),
+        aws_secret_access_key=os.getenv('MINIO_SECRET_KEY'),
+        region_name="us-east-1",
+    )
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    object_name = f"{company.lower()}_report_{timestamp}.pdf"
+
+    s3.upload_file('report.pdf', os.getenv('MINIO_BUCKET'), f'lm/reports/{object_name}')
