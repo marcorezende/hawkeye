@@ -101,10 +101,10 @@ def cleaned():
 
 @flow
 def fluxo_principal():
-    # ingest_data()
-    # create_secret()
-    # raw()
-    # cleaned()
+    ingest_data()
+    create_secret()
+    raw()
+    cleaned()
     generate_report_pipe()
 
 
