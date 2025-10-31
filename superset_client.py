@@ -1,12 +1,16 @@
 import os
 import time
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from pprint import pprint
 from urllib.parse import urlparse, urlunparse
 
 import boto3
+import duckdb
 import requests
 import json
+
+from dotenv import load_dotenv
+from openai import OpenAI
 
 from generate_report import generate_report_pdf
 
@@ -180,7 +184,60 @@ def generate_report_pipe():
     for chart_id in chart_ids:
         ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=chart_id)
 
-    generate_report_pdf(output_path='report.pdf', name=company)
+    duckdb.sql(f"""
+    CREATE OR REPLACE PERSISTENT SECRET my_secret (
+    TYPE S3,
+    REGION 'us-east-1',
+    KEY_ID '{os.getenv("MINIO_ACCESS_KEY")}',
+    SECRET '{os.getenv("MINIO_SECRET_KEY")}',
+    ENDPOINT '{os.getenv("MINIO_ENDPOINT").replace('http://', '')}',
+    USE_SSL 'false',
+    URL_STYLE 'path');
+    """)
+    today = date.today()
+    last_week = today - timedelta(days=7)
+
+    text = duckdb.sql(f"""
+    SELECT DISTINCT final_comments
+    FROM 's3://hawkeye/lm/cleaned/checklist.parquet'
+    WHERE unidade = {company} and data_inicial BETWEEN {str(last_week)} AND {str(today)};
+    ORDER BY data_inicial DESC
+    """).df().to_markdown()
+
+    max_chars = 28_000 * 4
+
+    if len(text) > max_chars:
+        print(f"[INFO] Texto truncado de {len(text)} para {max_chars} caracteres.")
+        text = text[:max_chars]
+
+    template = f'''
+    You are a food safety and data analyst specialist to LM food safety consultant.
+    LM food safety is a brazilian company that give consultant to restaurants and supermarkets about food safety.
+
+    Your task is to analyse last week previous visits to establishments and give summarized version to the client.
+
+
+    [Instruction]:
+    1. Do not answer with additional text or conclusion, just summarize.
+    2. Pay attention to the recurring points.
+    4. Always answer in paragraph format in in pt-BR
+    5. Summarize to max of 80 words.
+
+    [Comments]
+    {{dataframe}}
+    '''
+
+    client = OpenAI(
+        api_key=os.getenv("OPENAI_API_KEY"))
+    response = client.chat.completions.create(
+        model='gpt-4o',
+        messages=[
+            {"role": "user", "content": template.format(dataframe=text)}
+        ],
+        temperature=1.0
+    )
+
+    generate_report_pdf(output_path='report.pdf', name=company, text=response.choices[0].message.content)
     s3 = boto3.client(
         "s3",
         endpoint_url=os.getenv('MINIO_ENDPOINT'),

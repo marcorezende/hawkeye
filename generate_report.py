@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from weasyprint import HTML
 
 
-def generate_report_pdf(output_path, name):
+def generate_report_pdf(output_path, name, text):
     today = date.today()
     last_week = today - timedelta(days=7)
 
@@ -12,6 +12,6 @@ def generate_report_pdf(output_path, name):
     with open("report.html", "r", encoding="utf-8") as f:
         html_template = f.read()
 
-    html_filled = html_template.format(name=name, date=today.strftime('%d/%m/%Y'), week_range=week_range)
+    html_filled = html_template.format(name=name, date=today.strftime('%d/%m/%Y'), week_range=week_range, summary=text)
 
     HTML(string=html_filled, base_url=".").write_pdf(target=output_path)

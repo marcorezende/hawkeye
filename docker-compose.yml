@@ -101,6 +101,7 @@ services:
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
       AWS_REGION: ${AWS_REGION}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
       PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@superset_postgres:5432/prefect
 
   prefect-worker:
@@ -122,6 +123,7 @@ services:
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
       AWS_REGION: ${AWS_REGION}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
 volumes:
   minio-hawkeye-data:
     driver: local
