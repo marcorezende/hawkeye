@@ -199,7 +199,7 @@ def generate_report_pipe():
     text = duckdb.sql(f"""
     SELECT DISTINCT final_comments
     FROM 's3://hawkeye/lm/cleaned/checklist.parquet'
-    WHERE unidade = {company} and data_inicial BETWEEN {str(last_week)} AND {str(today)};
+    WHERE unidade = '{company}' and data_inicial BETWEEN '{str(last_week)}' AND '{str(today)}'
     ORDER BY data_inicial DESC
     """).df().to_markdown()
 
