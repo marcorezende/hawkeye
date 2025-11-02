@@ -9,7 +9,6 @@ import duckdb
 import requests
 import json
 
-from dotenv import load_dotenv
 from openai import OpenAI
 
 from generate_report import generate_report_pdf
@@ -160,19 +159,19 @@ class ScreenshotChart:
 
 def generate_report_pipe():
     BASE_URL = "http://superset:8088"
-    USERNAME = "admin"
-    PASSWORD = "admin"
+    USERNAME = os.getenv('SUPERSET_USERNAME')
+    PASSWORD = os.getenv('SUPERSET_PASSWORD')
 
     charts_mapping = {
-        'total_vencidos': 5,
-        'total_visitas': 3,
-        'total_nao_conformidades': 4,
-        'media_nota': 6,
-        'conformidade_por_unidade': 1,
-        'media_nota_por_unidade': 7,
-        'porcentagem_conformidade': 2,
-        'conformidade_por_area': 9,
-        'itens_nao_conformes': 8
+        'total_vencidos': 8,
+        'total_visitas': 9,
+        'total_nao_conformidades': 10,
+        'media_nota': 11,
+        'conformidade_por_unidade': 12,
+        'media_nota_por_unidade': 13,
+        'porcentagem_conformidade': 14,
+        'conformidade_por_area': 15,
+        'itens_nao_conformes': 16
     }
 
     chart_ids = charts_mapping.values()
