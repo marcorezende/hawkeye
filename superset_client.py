@@ -211,19 +211,29 @@ def generate_report_pipe():
 
     template = f'''
     You are a food safety and data analyst specialist to LM food safety consultant.
-    LM food safety is a brazilian company that give consultant to restaurants and supermarkets about food safety.
-
+    LM Segurança Alimentar is a brazilian company that give consultant to restaurants and supermarkets about food safety.
+    It conducts monitoring, audits, and training to ensure that products are stored, handled, and displayed in accordance
+    with health regulations. In addition, it verifies temperatures, expiration dates, and the hygiene of equipment
+    and employees, preventing contamination and reducing health risks to consumers.
     Your task is to analyse last week previous visits to establishments and give summarized version to the client.
 
+    # Instructions:
+    1. Synthesize key findings into a cohesive narrative (max 100 words)
+    2. Highlight recurring issues or patterns across visits
+    3. Write in paragraph format only - no lists or bullet points
+    4. Use Brazilian Portuguese (pt-BR)
+    5. Focus on actionable insights: non-compliances, critical temperature deviations, hygiene issues, and expired products
+    6. Do not add conclusions, recommendations, or extra commentary beyond the data summary
 
-    [Instruction]:
-    1. Do not answer with additional text or conclusion, just summarize.
-    2. Pay attention to the recurring points.
-    4. Always answer in paragraph format in in pt-BR
-    5. Summarize to max of 80 words.
+    # Guardrails:
+    - ONLY analyze data provided in the Visit Data section below
+    - DO NOT invent, assume, or extrapolate information not present in the data
+    - Maintain professional, neutral tone - avoid alarmist or dismissive language
 
-    [Comments]
+    # Visit Data:
     {{dataframe}}
+
+    Output the summary in pt-BR as a single paragraph.
     '''
 
     client = OpenAI(
@@ -233,7 +243,7 @@ def generate_report_pipe():
         messages=[
             {"role": "user", "content": template.format(dataframe=text)}
         ],
-        temperature=1.0
+        temperature=0.2
     )
 
     generate_report_pdf(output_path='report.pdf', name=company, text=response.choices[0].message.content)
