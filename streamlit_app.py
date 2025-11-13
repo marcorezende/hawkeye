@@ -107,6 +107,11 @@ def trigger_prefect_flow(parameters):
         payload = {
             'parameters': parameters,
             'flow_id': '659daac6-5995-4404-ad70-27608e266826',
+            "deployment_id": "57ee8f31-26a2-481b-b335-105445e2d042",
+            "work_pool_name": "lm",
+            "state": {
+                "type": "SCHEDULED"
+            }
         }
 
         response = requests.post(url, json=payload, headers=headers, auth=(PREFECT_USERNAME, PREFECT_PASSWORD),

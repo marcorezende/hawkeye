@@ -18,7 +18,7 @@ def ingest_data(max_retries: int = 5, base_delay: int = 10):
             download_dir = "./downloads"
             os.makedirs(download_dir, exist_ok=True)
             today = date.today()
-            last_week = today - timedelta(days=7)
+            last_week = today - timedelta(days=1)
 
             start_date = last_week.strftime('%d/%m/%Y')
             end_date = today.strftime('%d/%m/%Y')
