@@ -5,9 +5,10 @@ from superset_client import generate_report_pipe
 
 
 @flow
-def fluxo_principal():
+def fluxo_principal(company, start_date, end_date):
     # generate_report_pipe()
-    print(variables.get("start_date"))
+    print(company)
+    # print(variables.get("company"))
 
 
 if __name__ == "__main__":
