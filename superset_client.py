@@ -157,7 +157,7 @@ class ScreenshotChart:
         self.download_screenshot(url=new_image_url, headers=headers, output_path=f"./data/img/{chart_id}.png")
 
 
-def generate_report_pipe():
+def generate_report_pipe(company, start_date, end_date):
     BASE_URL = "http://superset:8088"
     USERNAME = os.getenv('SUPERSET_USERNAME')
     PASSWORD = os.getenv('SUPERSET_PASSWORD')
@@ -176,8 +176,6 @@ def generate_report_pipe():
 
     chart_ids = charts_mapping.values()
 
-    company = 'SUPERMERCADO RODRIGUES'
-
     UpdateChart(BASE_URL, USERNAME, PASSWORD, chart_ids, company).run()
 
     for chart_id in chart_ids:
@@ -193,13 +191,11 @@ def generate_report_pipe():
     USE_SSL 'false',
     URL_STYLE 'path');
     """)
-    today = date.today()
-    last_week = today - timedelta(days=7)
 
     text = duckdb.sql(f"""
     SELECT DISTINCT final_comments
     FROM 's3://hawkeye/lm/cleaned/checklist.parquet'
-    WHERE unidade = '{company}' and data_inicial BETWEEN '{str(last_week)}' AND '{str(today)}'
+    WHERE unidade = '{company}' and data_inicial BETWEEN '{str(start_date)}' AND '{str(end_date)}'
     ORDER BY data_inicial DESC
     """).df().to_markdown()
 
