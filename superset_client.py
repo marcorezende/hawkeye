@@ -157,7 +157,7 @@ class ScreenshotChart:
         self.download_screenshot(url=new_image_url, headers=headers, output_path=f"./data/img/{chart_id}.png")
 
 
-def generate_report_pipe(company, start_date, end_date):
+def generate_report_pipe(company, start_date, end_date, report_name):
     BASE_URL = "http://superset:8088"
     USERNAME = os.getenv('SUPERSET_USERNAME')
     PASSWORD = os.getenv('SUPERSET_PASSWORD')
@@ -253,7 +253,8 @@ def generate_report_pipe(company, start_date, end_date):
         temperature=0.2
     )
 
-    generate_report_pdf(output_path='report.pdf', name=company, text=response.choices[0].message.content)
+    generate_report_pdf(output_path='report.pdf', name=company, text=response.choices[0].message.content,
+                        start_date=start_date, end_date=end_date)
     s3 = boto3.client(
         "s3",
         endpoint_url=os.getenv('MINIO_ENDPOINT'),
@@ -261,8 +262,5 @@ def generate_report_pipe(company, start_date, end_date):
         aws_secret_access_key=os.getenv('MINIO_SECRET_KEY'),
         region_name="us-east-1",
     )
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    object_name = f"{company.lower()}_report_{timestamp}.pdf"
-
-    s3.upload_file('report.pdf', os.getenv('MINIO_BUCKET'), f'lm/reports/{object_name}')
+    s3.upload_file('report.pdf', os.getenv('MINIO_BUCKET'), f'lm/reports/{report_name}')
