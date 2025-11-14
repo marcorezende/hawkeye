@@ -189,7 +189,7 @@ def generate_report_pipe(company, start_date, end_date, report_name):
 
     UpdateChart(BASE_URL, USERNAME, PASSWORD, chart_ids, company).run()
 
-    for k, chart_id in charts_mapping.values():
+    for k, chart_id in charts_mapping.items():
         ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=chart_id, name=k)
 
     duckdb.sql(f"""
