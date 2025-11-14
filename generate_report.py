@@ -4,7 +4,7 @@ from weasyprint import HTML
 
 
 def generate_report_pdf(output_path, name, text, start_date, end_date):
-    day_range = f"{start_date.strftime('%d/%m/%Y')} - {end_date.strftime('%d/%m/%Y')}"
+    day_range = f"{start_date} - {end_date}"
     today = date.today()
     with open("report.html", "r", encoding="utf-8") as f:
         html_template = f.read()
