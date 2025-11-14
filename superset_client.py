@@ -149,12 +149,12 @@ class ScreenshotChart:
         else:
             raise Exception(f"Erro ao baixar imagem. Status: {response.status_code}, Detalhes: {response.text}")
 
-    def run(self, chart_id):
+    def run(self, chart_id, name):
         chart_cache_screenshot_url = self.cache_screenshot_url.format(id=chart_id)
         headers = self.get_auth_token(url=self.base_url, username=self.username, password=self.password)
         image_url = self.cache_screenshot(cache_screenshot_url=chart_cache_screenshot_url, headers=headers)
         new_image_url = self.change_base_url(old_url=image_url, new_base_url=self.base_url)
-        self.download_screenshot(url=new_image_url, headers=headers, output_path=f"./data/img/{chart_id}.png")
+        self.download_screenshot(url=new_image_url, headers=headers, output_path=f"./data/img/{name}.png")
 
 
 def generate_report_pipe(company, start_date, end_date, report_name):
@@ -182,15 +182,15 @@ def generate_report_pipe(company, start_date, end_date, report_name):
         'media_nota_por_unidade': 7,
         'porcentagem_conformidade': 2,
         'conformidade_por_area': 9,
-        'itens_nao_conformes': 8
+        # 'itens_nao_conformes': 8
     }
 
     chart_ids = charts_mapping.values()
 
     UpdateChart(BASE_URL, USERNAME, PASSWORD, chart_ids, company).run()
 
-    for chart_id in chart_ids:
-        ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=chart_id)
+    for k, chart_id in charts_mapping.values():
+        ScreenshotChart(BASE_URL, USERNAME, PASSWORD).run(chart_id=chart_id, name=k)
 
     duckdb.sql(f"""
     CREATE OR REPLACE PERSISTENT SECRET my_secret (
