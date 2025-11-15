@@ -23,7 +23,7 @@ def ingest_data(max_retries: int = 5, base_delay: int = 10):
             SELECT MAX(data_inicial)
             FROM 's3://hawkeye/lm/cleaned/checklist.parquet'
             """).df().values[0][0].item().date()
-
+    print("Last date:", last_date)
     for attempt in range(1, max_retries + 1):
         try:
             print(f"Tentativa {attempt}/{max_retries}...")

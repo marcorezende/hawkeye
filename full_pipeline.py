@@ -6,7 +6,7 @@ from prefect import flow, task
 from download_data import ingest_data
 
 
-@task
+@task(log_prints=True)
 def ingest():
     ingest_data()
 
