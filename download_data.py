@@ -2,11 +2,27 @@ import os
 import time
 from datetime import date, timedelta
 import boto3
+import duckdb
 from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright
 
 
 def ingest_data(max_retries: int = 5, base_delay: int = 10):
+    duckdb.sql(f"""
+    CREATE OR REPLACE PERSISTENT SECRET my_secret (
+    TYPE S3,
+    REGION 'us-east-1',
+    KEY_ID '{os.getenv("MINIO_ACCESS_KEY")}',
+    SECRET '{os.getenv("MINIO_SECRET_KEY")}',
+    ENDPOINT '{os.getenv("MINIO_ENDPOINT").replace('http://', '')}',
+    USE_SSL 'false',
+    URL_STYLE 'path');
+    """)
+
+    last_date = duckdb.sql("""
+            SELECT MAX(data_inicial)
+            FROM 's3://hawkeye/lm/cleaned/checklist.parquet'
+            """).df().values[0][0].item().date()
 
     for attempt in range(1, max_retries + 1):
         try:
@@ -18,9 +34,8 @@ def ingest_data(max_retries: int = 5, base_delay: int = 10):
             download_dir = "./downloads"
             os.makedirs(download_dir, exist_ok=True)
             today = date.today()
-            last_week = today - timedelta(days=1)
 
-            start_date = last_week.strftime('%d/%m/%Y')
+            start_date = last_date.strftime('%d/%m/%Y')
             end_date = today.strftime('%d/%m/%Y')
 
             with sync_playwright() as p:
@@ -63,8 +78,10 @@ def ingest_data(max_retries: int = 5, base_delay: int = 10):
                 first_row = page.locator("table.data-table tbody tr:first-child")
                 first_row.hover()
 
-                page.wait_for_selector("table.data-table tbody tr:first-child a.js-row-download-button:visible", timeout=300000)
-                first_download_button = page.locator("table.data-table tbody tr:first-child a.js-row-download-button:visible")
+                page.wait_for_selector("table.data-table tbody tr:first-child a.js-row-download-button:visible",
+                                       timeout=300000)
+                first_download_button = page.locator(
+                    "table.data-table tbody tr:first-child a.js-row-download-button:visible")
 
                 with page.expect_download(timeout=360000) as download_info:
                     first_download_button.click()
