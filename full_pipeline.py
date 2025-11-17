@@ -84,6 +84,8 @@ def cleaned():
         item,
         reposta,
         COALESCE(len(string_split(imagens, ' ')), 0) as total_fotos,
+        TRY_CAST(reposta AS INTEGER) as total_vencidos,
+        CASE WHEN item = 'Ausência de Produtos Vencidos nos expositores auditados' THEN true ELSE false END AS item_total_vencido,
         date_diff('minutes', data_inicial, data_final) as duracao,
         CAST(REPLACE(result, ',', '.') AS DOUBLE) AS result,
         data_inicial,
