@@ -5,6 +5,17 @@ For more configuration options, see:
 
 import os
 from flask_caching.backends.rediscache import RedisCache
+from superset.translations.utils import get_language_pack
+
+
+def override_bootstrap_locale(data):
+    if data.get("locale") == "pt":
+        data["locale"] = "pt_BR"
+        data["language_pack"] = get_language_pack('pt_BR')
+    return data
+
+
+COMMON_BOOTSTRAP_OVERRIDES_FUNC = override_bootstrap_locale
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 MAPBOX_API_KEY = os.getenv("MAPBOX_API_KEY", "")
@@ -81,6 +92,13 @@ EXPLORE_FORM_DATA_CACHE_CONFIG = {**CACHE_CONFIG, "CACHE_KEY_PREFIX": "superset_
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:5432/{os.getenv('POSTGRES_DB')}"
 
+LANGUAGES = {
+    'en': {'flag': 'us', 'name': 'English'},
+    'pt_BR': {'flag': 'br', 'name': 'Portuguese (Brazil)'},
+}
+
+# Set the default language for the application
+BABEL_DEFAULT_LOCALE = 'pt_BR'
 # Uncomment if you want to load example data (using "superset load_examples") at the
 # same location as your metadata postgresql instance. Otherwise, the default sqlite
 # will be used, which will not persist in volume when restarting superset by default.

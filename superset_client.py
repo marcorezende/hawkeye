@@ -182,7 +182,7 @@ def generate_report_pipe(company, start_date, end_date, report_name):
         'media_nota_por_unidade': 7,
         'porcentagem_conformidade': 2,
         'conformidade_por_area': 9,
-        # 'itens_nao_conformes': 8
+        'vencidor_por_loja': 15
     }
 
     chart_ids = charts_mapping.values()
