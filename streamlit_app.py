@@ -339,6 +339,9 @@ def authenticate(email, password):
 
 
 def get_dashboard_stats(conn):
+    stats = {}
+
+    # Estatísticas básicas
     stats['total_reports'] = pd.read_sql_query("SELECT COUNT(*) as count FROM reports", conn)['count'][0]
     stats['total_companies'] = pd.read_sql_query("SELECT COUNT(*) as count FROM company", conn)['count'][0]
     stats['total_users'] = pd.read_sql_query("SELECT COUNT(*) as count FROM users", conn)['count'][0]

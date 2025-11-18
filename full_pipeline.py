@@ -85,7 +85,7 @@ def cleaned():
         reposta,
         COALESCE(len(string_split(imagens, ' ')), 0) as total_fotos,
         TRY_CAST(reposta AS INTEGER) as total_vencidos,
-        CASE WHEN item = 'Ausência de Produtos Vencidos nos expositores auditados' THEN true ELSE false END AS item_total_vencido,
+        CASE WHEN total_vencidos IS NOT NULL THEN true ELSE false END AS item_total_vencido,
         date_diff('minutes', data_inicial, data_final) as duracao,
         CAST(REPLACE(result, ',', '.') AS DOUBLE) AS result,
         data_inicial,
@@ -94,7 +94,8 @@ def cleaned():
         final_comments,
         FROM raw
     )
-    SELECT DISTINCT id, unidade, cidade, regiao, nome, autor, area, item, reposta, total_fotos, duracao, result, data_inicial, data_final, data_sincronizacao, final_comments
+    SELECT DISTINCT id, unidade, cidade, regiao, nome, autor, area, item, reposta, total_fotos, total_vencidos,
+     item_total_vencido,  duracao, result, data_inicial, data_final, data_sincronizacao, final_comments
     FROM cleaned
     ) TO 's3://hawkeye/lm/cleaned/checklist.parquet' (FORMAT 'parquet');
     """)
