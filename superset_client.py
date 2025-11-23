@@ -162,28 +162,30 @@ def generate_report_pipe(company, start_date, end_date, report_name):
     USERNAME = os.getenv('SUPERSET_USERNAME')
     PASSWORD = os.getenv('SUPERSET_PASSWORD')
 
-    # charts_mapping = {
-    #     'total_vencidos': 8,
-    #     'total_visitas': 9,
-    #     'total_nao_conformidades': 10,
-    #     'media_nota': 11,
-    #     'conformidade_por_unidade': 12,
-    #     'media_nota_por_unidade': 13,
-    #     'porcentagem_conformidade': 14,
-    #     'conformidade_por_area': 15,
-    #     'itens_nao_conformes': 16
-    # }
     charts_mapping = {
-        'total_vencidos': 5,
-        'total_visitas': 3,
-        'total_nao_conformidades': 4,
-        'media_nota': 6,
-        'conformidade_por_unidade': 1,
-        'media_nota_por_unidade': 7,
-        'porcentagem_conformidade': 2,
-        'conformidade_por_area': 9,
-        'vencidor_por_loja': 15
+        'total_vencidos': 8,
+        'total_visitas': 9,
+        'total_nao_conformidades': 10,
+        'media_nota': 11,
+        'conformidade_por_unidade': 12,
+        'media_nota_por_unidade': 13,
+        'porcentagem_conformidade': 14,
+        'conformidade_por_area': 15,
+        'itens_nao_conformes': 16,
+        'vencidor_por_loja': 17
+
     }
+    # charts_mapping = {
+    #     'total_vencidos': 5,
+    #     'total_visitas': 3,
+    #     'total_nao_conformidades': 4,
+    #     'media_nota': 6,
+    #     'conformidade_por_unidade': 1,
+    #     'media_nota_por_unidade': 7,
+    #     'porcentagem_conformidade': 2,
+    #     'conformidade_por_area': 9,
+    #     'vencidor_por_loja': 15
+    # }
 
     chart_ids = charts_mapping.values()
 
