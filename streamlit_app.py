@@ -527,7 +527,7 @@ def update_report_status(report_id: int, status: str, file_path: str = None) -> 
         return False
 
 
-def poll_flow_status(report_id: int, flow_run_id: str, max_attempts: int = 60, interval: int = 5):
+def poll_flow_status(report_id: int, flow_run_id: str, max_attempts: int = 600, interval: int = 5):
     """Polling do status do flow"""
     attempts = 0
     final_states = ['COMPLETED', 'FAILED', 'CANCELLED', 'CRASHED']

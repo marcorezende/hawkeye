@@ -29,29 +29,30 @@
         }}
 
         .header {{
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            display: table;
+            width: 100%;
             background-color: #1b2a57;
             color: white;
-            padding: 15px;
+            padding: 20px;
+            box-sizing: border-box;
         }}
 
-        .header h1 {{
-            margin: 0;
-            font-size: 24px;
-
+        .header-cell {{
+            display: table-cell;
+            vertical-align: middle;
         }}
 
-        .header h2 {{
-            margin: 0;
-            font-size: 20px;
-
+        .header-left {{
+            text-align: left;
         }}
 
-        .header img {{
-            width: 100px;
+        .header-center {{
+            text-align: center;
+            width: 100%; /* Takes remaining space */
+        }}
 
+        .header-right {{
+            text-align: right;
         }}
 
         .subheader {{
@@ -123,13 +124,13 @@
         }}
 
         footer {{
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            display: table;
+            width: 100%;
+            background-color: #e9e3d8;
             margin-top: 50px;
             font-size: 16px;
-            padding: 10px;
-            background-color: #e9e3d8;
+            padding: 20px;
+            box-sizing: border-box;
         }}
 
         footer a {{
@@ -141,6 +142,22 @@
             width: 170px;
         }}
 
+        .footer-cell {{
+            display: table-cell;
+            vertical-align: middle;
+        }}
+
+        .footer-left {{
+            text-align: left;
+            width: 100%;
+        }}
+
+        .footer-right {{
+            text-align: right;
+            white-space: nowrap;
+            padding-left: 20px;
+        }}
+
         .summary {{
             color: black;
         }}
@@ -150,13 +167,14 @@
 <body>
 
 <div class="header">
-    <div>
+    <div class="header-cell header-left">
         <h1>RELATÓRIO SEMANAL</h1>
         <h2>{name}</h2>
         <div class="subheader">RESUMO DA SEMANA ({week_range})</div>
     </div>
-<!--    <img src="data/img/lm_logo.png" alt="logo">-->
-
+    <div class="header-cell header-right">
+        <img src="data/img/logo-lm.svg" alt="logo" style="width: 100px;">
+    </div>
 
 </div>
 
@@ -221,8 +239,12 @@
 </div>
 
 <footer>
-    <div>
-        Relatório gerado em {date}<br>
+    <div class="footer-cell footer-left">
+        Relatório gerado por <strong>INSSI</strong> em {date}<br>
+        🌐 <a href="https://www.inssi.com.br">www.inssi.com.br</a> | ✉️ <a href="mailto:contato@inssi.com.br">contato@inssi.com.br</a>
+    </div>
+    <div class="footer-cell footer-right">
+        <img src="data/img/logo.svg" alt="Minha Figura">
     </div>
 </footer>
 

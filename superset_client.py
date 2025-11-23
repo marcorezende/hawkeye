@@ -224,7 +224,7 @@ def generate_report_pipe(company, start_date, end_date, report_name):
     It conducts monitoring, audits, and training to ensure that products are stored, handled, and displayed in accordance
     with health regulations. In addition, it verifies temperatures, expiration dates, and the hygiene of equipment
     and employees, preventing contamination and reducing health risks to consumers.
-    Your task is to analyse last week previous visits to establishments and give summarized version to the client.
+    Your task is to analyse previous visits to establishments and give summarized version to the client.
 
     # Instructions:
     1. Synthesize key findings into a cohesive narrative (max 100 words)
@@ -239,6 +239,10 @@ def generate_report_pipe(company, start_date, end_date, report_name):
     - DO NOT invent, assume, or extrapolate information not present in the data
     - Maintain professional, neutral tone - avoid alarmist or dismissive language
 
+    # Visit Date Range:
+    Start date: {{start_date}}
+    End date: {{end_date}}
+    
     # Visit Data:
     {{dataframe}}
 
@@ -250,7 +254,8 @@ def generate_report_pipe(company, start_date, end_date, report_name):
     response = client.chat.completions.create(
         model='gpt-4o',
         messages=[
-            {"role": "user", "content": template.format(dataframe=text)}
+            {"role": "user", "content": template.format(dataframe=text,
+                                                        start_date=str(start_date), end_date=str(end_date))},
         ],
         temperature=0.2
     )
